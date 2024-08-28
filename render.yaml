@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: webrtc-app
+    name: webrtcappr
     env: node
     buildCommand: 'npm install'
     startCommand: 'npm start'
