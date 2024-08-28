@@ -8,7 +8,7 @@ const io = socketIo(server);
 const { exec } = require('child_process');
 const path = require('path');
 
-server.use(express.static('public'));
+app.use(express.static('public'));
 
 io.on('connection', socket => {
     console.log('New user connected');
@@ -47,11 +47,10 @@ io.on('connection', socket => {
     });
 });
 
-const PORT = process.env.PORT || 3000;
 
 const outputFilePath = path.join(__dirname, 'output.m3u8');
 
-server.get('/stream', (req, res) => {
+app.get('/stream', (req, res) => {
   const inputStream = 'https://webrtcappr.onrender.com/';
   const command = `ffmpeg -i ${inputStream} -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls ${outputFilePath}`;
 
@@ -68,7 +67,7 @@ server.get('/stream', (req, res) => {
 });
 
 // Route pour télécharger directement le fichier .m3u8
-server.get('/download', (req, res) => {
+app.get('/download', (req, res) => {
   res.download(outputFilePath, 'output.m3u8', (err) => {
     if (err) {
       console.error(`Error during download: ${err.message}`);
@@ -79,5 +78,5 @@ server.get('/download', (req, res) => {
   });
 });
 
-
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
